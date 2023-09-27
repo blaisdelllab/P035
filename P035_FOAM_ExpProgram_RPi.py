@@ -149,14 +149,12 @@ class ExperimenterControlPanel(object):
         # personal computer. These include setting up the hopper object so it 
         # can be referenced in the future, or the location where data files
         # should be stored.
-        # if operant_box_version:
-        #    # Setup the data directory in "Documents"
-        #    self.doc_directory = str(os_path.expanduser('~'))+"/Documents/"
-        #    self.data_folder = "P035_data" # The folder within Documents where subject data is kept
-        #   self.data_folder_directory = str(os_path.expanduser('~'))+"/OneDrive/Desktop/Data/" + self.data_folder
-        # Set hopper object to be a variable of self, so it can be referenced...
-        # else: # If not, just save in the current directory the program us being run in 
-        self.data_folder_directory = getcwd() + "/data/"
+        if operant_box_version:
+            # Setup the data directory in "Documents"
+            self.data_folder = "P035_data" # The folder within Documents where subject data is kept
+            self.data_folder_directory = str(os_path.expanduser('~'))+"/Desktop/Data/" + self.data_folder
+        else: # If not, just save in the current directory the program us being run in 
+            self.data_folder_directory = getcwd() + "/data"
         
         # setup the root Tkinter window
         self.control_window = Tk()
