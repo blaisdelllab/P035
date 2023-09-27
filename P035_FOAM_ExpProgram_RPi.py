@@ -271,18 +271,12 @@ class ExperimenterControlPanel(object):
         # This function checks to see if a pigeon's data folder currently 
         # exists in the respective "data" folder within the Documents
         # folder and, if not, creates one.
-        #if operant_box_version:
-        #   try:
-        #        if not os_path.isdir(self.data_folder_directory + pigeon_name):
-        #            mkdir(os_path.join(self.data_folder_directory, pigeon_name))
-        #            print("\n ** NEW DATA FOLDER FOR %s CREATED **" % pigeon_name.upper())
-        #    except FileExistsError:
-       #         print("Data folder for %s exists." % pigeon_name)       
-       # else:
-        parent_directory = getcwd() + "/data"
-        if not os_path.isdir(parent_directory + "/" + pigeon_name):
-            mkdir(os_path.join(parent_directory, pigeon_name))
-            print("\n ** NEW DATA FOLDER FOR %s CREATED **" % pigeon_name.upper())
+        try:
+            if not os_path.isdir(self.data_folder_directory + pigeon_name):
+                mkdir(os_path.join(self.data_folder_directory, pigeon_name))
+                print("\n ** NEW DATA FOLDER FOR %s CREATED **" % pigeon_name.upper())
+        except FileExistsError:
+            print(f"DATA FOLDER FOR {pigeon_name.upper()} EXISTS")
                 
     def build_chamber_screen(self):
         # Once the green "start program" button is pressed, then the mainscreen
