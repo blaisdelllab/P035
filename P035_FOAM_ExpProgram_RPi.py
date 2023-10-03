@@ -6,7 +6,7 @@ Created on Tue Jan 17 13:35:04 2023
 
 @author: cyruskirkman
 
-Last updated: 2023-09-25 CK
+Last updated: 2023-10-03 CK
 
 
 This is the main code for Kayley Ozimac's first-year 'FOAM' project
@@ -302,7 +302,7 @@ class ExperimenterControlPanel(object):
                                                      ]
                         # If not forced choice (default)...
                         if not self.forced_choice_variable.get():
-                            print(f"{'SESSION STARTED': ^15}") 
+                            print("Operant Box Screen Built") 
                             list_of_variables_to_pass.append([]) # Add an empty list at the end for forced choice trials
                             self.MS = MainScreen(*list_of_variables_to_pass)
                         # ...if forced choice
@@ -494,6 +494,7 @@ class MainScreen(object):
         self.auto_reinforcer_timer = 10 * 1000 # Time (ms) before reinforcement for AS
         self.start_time = None # This will be reset once the session actually starts
         self.trial_start = None # Duration into each trial as a second count, resets each trial
+        self.trial_FR = None # FR of a trial
         self.session_duration = datetime.now() + timedelta(minutes = 90) # Max session time is 90 min
         self.ITI_duration = 15 * 1000 # duration of inter-trial interval (ms)
         if self.subject_ID in ["Yoshi", "Shy Guy", "Athena"]:
@@ -505,6 +506,7 @@ class MainScreen(object):
         self.FI_duration = 1 # 1ms FI timer
         self.FI_complete = True
         self.current_trial_counter = 0 # counter for current trial in session
+        self.trial_stage = "NA"
         self.reinforced_trial_counter = 0 # number of trials where a reinforcer was provided
         # Max number of trials within a session differ by phase
         if self.training_phase == 0: # Autoshaping only has 90
@@ -513,7 +515,6 @@ class MainScreen(object):
             self.max_number_of_reinforced_trials = 96 # default
         # Number of probe trials during CBE or FM subphases should be a variable
         self.probe_trials_per_session = 4
-        
         
         # Here are variables for data structuring 
         self.session_data_frame = [] #This where trial-by-trial data is stored
@@ -540,6 +541,7 @@ class MainScreen(object):
             # objects off the mnainscreen (making it blank), unbinds the spacebar to 
             # the first_ITI link, followed by a 30s pause before the first trial to 
             # let birds settle in and acclimate.
+            print("Spacebar pressed -- SESSION STARTED") 
             self.mastercanvas.delete("all")
             self.root.unbind("<space>")
             self.start_time = datetime.now() # Set start time
@@ -1426,54 +1428,50 @@ class MainScreen(object):
         
     
     def write_data(self, event, outcome):
-        try:
-            # This function writes a new data line after EVERY peck. Data is
-            # organized into a matrix (just a list/vector with two dimensions,
-            # similar to a table). This matrix is appended to throughout the 
-            # session, then written to a .csv once at the end of the session.
-            if event != None: 
-                x, y = event.x, event.y
-            else: # There are certain data events that are not pecks.
-                x, y = "NA", "NA"
-                
-            print(f"{outcome:>25} | x: {x: ^3} y: {y:^3} | {self.trial_stage:^5} | {str(datetime.now() - self.start_time)} | {self.stimulus_order_dict[self.current_trial_counter]['trial_type']}")
-            # print(f"{outcome:>30} | x: {x: ^3} y: {y:^3} | Target: {self.current_target_location: ^2} | {str(datetime.now() - self.start_time)}")
-            self.session_data_frame.append([
-                str(datetime.now() - self.start_time), # SessionTime as datetime object
-                x, # X coordinate of a peck
-                y, # Y coordinate of a peck
-                outcome, # Type of event (e.g., background peck, target presentation, session end, etc.)
-                # For the three stimuli shown, we need to split the filename from the directory
-                self.stimulus_order_dict[self.current_trial_counter]["sample_stimulus_name"], # Sample stimulus
-                self.stimulus_order_dict[self.current_trial_counter]["left_stimulus_name"], # Left comparison
-                self.stimulus_order_dict[self.current_trial_counter]["right_stimulus_name"], # Right comparison 
-                self.stimulus_order_dict[self.current_trial_counter]["correct_stimulus_name"], # Correct stimulus
-                self.stimulus_order_dict[self.current_trial_counter]["pair_num"], # Number of the pair
-                self.trial_stage, # Substage within each trial (1 or 2)
-                round((time() - self.trial_start - (self.ITI_duration/1000)), 5), # Time into this trial minus ITI (if session ends during ITI, will be negative)
-                self.current_trial_counter, # Trial count within session (1 - max # trials)
-                self.reinforced_trial_counter, # Reinforced trial counter
-                self.trial_FR, # FR of a specific trial
-                self.FI_duration, # FI Timer
-                self.stimulus_order_dict[self.current_trial_counter]["trial_type"], # Trial type (e.g., "training", "CBE.1", etc.)
-                self.subject_ID, # Name of subject (same across datasheet)
-                self.training_phase, # Phase of training as a number (0 - 7)
-                self.training_subphase,  # Phase of training subphase as a numer (0 - 4)
-                self.forced_choice_session, # Forced choice session
-                self.all_new_simuli_var, # Forced choice session
-                date.today() # Today's date as "MM-DD-YYYY"
-                ])
+        # This function writes a new data line after EVERY peck. Data is
+        # organized into a matrix (just a list/vector with two dimensions,
+        # similar to a table). This matrix is appended to throughout the 
+        # session, then written to a .csv once at the end of the session.
+        if event != None: 
+            x, y = event.x, event.y
+        else: # There are certain data events that are not pecks.
+            x, y = "NA", "NA"
             
-            
-            header_list = ["SessionTime", "Xcord","Ycord", "Event",
-                           "SampleStimulus", "LComp", "RComp", "CorrectKey", "PairNum",
-                           "TrialSubStage", "TrialTime", "TrialNum", "ReinTrialNum",
-                           "SampleFR", "FI", "TrialType", "Subject", "TrainingPhase",
-                           "TrainingSubPhase", "ForcedChoiceSession", "AllNewStimuli"
-                           "Date"] # Column headers
-        except AttributeError:
-            print("-Error writing data...")
-            pass
+        print(f"{outcome:>25} | x: {x: ^3} y: {y:^3} | {self.trial_stage:^5} | {str(datetime.now() - self.start_time)} | {self.stimulus_order_dict[self.current_trial_counter]['trial_type']}")
+        # print(f"{outcome:>30} | x: {x: ^3} y: {y:^3} | Target: {self.current_target_location: ^2} | {str(datetime.now() - self.start_time)}")
+        self.session_data_frame.append([
+            str(datetime.now() - self.start_time), # SessionTime as datetime object
+            x, # X coordinate of a peck
+            y, # Y coordinate of a peck
+            outcome, # Type of event (e.g., background peck, target presentation, session end, etc.)
+            # For the three stimuli shown, we need to split the filename from the directory
+            self.stimulus_order_dict[self.current_trial_counter]["sample_stimulus_name"], # Sample stimulus
+            self.stimulus_order_dict[self.current_trial_counter]["left_stimulus_name"], # Left comparison
+            self.stimulus_order_dict[self.current_trial_counter]["right_stimulus_name"], # Right comparison 
+            self.stimulus_order_dict[self.current_trial_counter]["correct_stimulus_name"], # Correct stimulus
+            self.stimulus_order_dict[self.current_trial_counter]["pair_num"], # Number of the pair
+            self.trial_stage, # Substage within each trial (1 or 2)
+            round((time() - self.trial_start - (self.ITI_duration/1000)), 5), # Time into this trial minus ITI (if session ends during ITI, will be negative)
+            self.current_trial_counter, # Trial count within session (1 - max # trials)
+            self.reinforced_trial_counter, # Reinforced trial counter
+            self.trial_FR, # FR of a specific trial
+            self.FI_duration, # FI Timer
+            self.stimulus_order_dict[self.current_trial_counter]["trial_type"], # Trial type (e.g., "training", "CBE.1", etc.)
+            self.subject_ID, # Name of subject (same across datasheet)
+            self.training_phase, # Phase of training as a number (0 - 7)
+            self.training_subphase,  # Phase of training subphase as a numer (0 - 4)
+            self.forced_choice_session, # Forced choice session
+            self.all_new_simuli_var, # Forced choice session
+            date.today() # Today's date as "MM-DD-YYYY"
+            ])
+        
+        
+        header_list = ["SessionTime", "Xcord","Ycord", "Event",
+                       "SampleStimulus", "LComp", "RComp", "CorrectKey", "PairNum",
+                       "TrialSubStage", "TrialTime", "TrialNum", "ReinTrialNum",
+                       "SampleFR", "FI", "TrialType", "Subject", "TrainingPhase",
+                       "TrainingSubPhase", "ForcedChoiceSession", "AllNewStimuli"
+                       "Date"] # Column headers
         
     def write_comp_data(self, SessionEnded):
         # The following function creates a .csv data document. It is either 
