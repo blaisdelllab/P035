@@ -326,11 +326,7 @@ class ForcedChoiceOptionWindow (object):
     def __init__(self, training_phase, list_of_info_to_be_passsed):
         # Make the passed variables global within the class:
         self.list_of_info_to_be_passsed = list_of_info_to_be_passsed
-        
-        if operant_box_version:
-            stimuli_folder_path = str(os_path.expanduser('~')+"/OneDrive/Desktop/P035/stimuli/")
-        else:
-            stimuli_folder_path = "stimuli/"
+        stimuli_folder_path = "stimuli/"
         
         # This is a list of each picture file's directory
         stimuli_files_list = listdir(stimuli_folder_path)
