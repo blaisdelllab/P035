@@ -6,7 +6,7 @@ Created on Tue Jan 17 13:35:04 2023
 
 @author: cyruskirkman
 
-Last updated: 2023-10-03 CK
+Last updated: 2024-01-09 CK
 
 
 This is the main code for Kayley Ozimac's first-year 'FOAM' project
@@ -242,6 +242,24 @@ class ExperimenterControlPanel(object):
                                                       offvalue = False).pack()
         self.new_stimuli_only_variable.set(False) # Default set to False
         
+        # New/old procedure? Y/N binary radio button
+        Label(self.control_window,
+              text = "New/Old Procedure?").pack()
+        self.new_old_variable = StringVar()
+        self.new_old_button1 =  Radiobutton(self.control_window,
+                                    variable = self.new_old_variable,
+                                    text = "NA",
+                                    value = "NA").pack()
+        self.new_old_button2 = Radiobutton(self.control_window,
+                                  variable = self.new_old_variable,
+                                  text = "New",
+                                  value = "New").pack()
+        self.new_old_button3 = Radiobutton(self.control_window,
+                                  variable = self.new_old_variable,
+                                  text = "Old",
+                                  value = "Old").pack()
+        self.new_old_variable.set("NA") # Default set to NA
+        
         # Record data variable? Y/N binary radio button
         Label(self.control_window,
               text = "Record data in seperate data sheet?").pack()
@@ -283,40 +301,47 @@ class ExperimenterControlPanel(object):
         # object is created and pops up in a new window. It gets passed the
         # important inputs from the control panel. Importantly, it won't
         # run unless all the informative fields are filled in.
-        if not (self.forced_choice_variable.get() and self.new_stimuli_only_variable.get()):
-            if self.subject_ID_variable.get() in self.pigeon_name_list:
-                if self.training_phase_variable.get() in self.training_phase_name_list and self.training_subphase_variable.get() in  self.training_subphase_name_list:
-                    # If a forced choice session, it must be for training subphases 
-                    # only (and not autoshaping)
-                    if (self.forced_choice_variable.get() == 0) or (self.training_subphase_variable.get() == "i: Training" and self.training_phase_variable.get() != "0: Autoshaping") and not (self.new_stimuli_only_variable.get() and self.training_subphase_variable.get() > 0):
-                        list_of_variables_to_pass = [self.subject_ID_variable.get(),
-                                                     self.record_data_variable.get(), # Boolean for recording data (or not)
-                                                     self.data_folder_directory, # directory for data folder
-                                                     self.training_phase_variable.get(), # Which training phase
-                                                     self.training_phase_name_list, # list of training phases
-                                                     self.training_subphase_variable.get(), # Training subphase variable
-                                                     self.training_subphase_name_list,
-                                                     self.manual_FR_stringvar.get(), # Manual FR
-                                                     self.forced_choice_variable.get(), # Forced choice Boolean,
-                                                     self.new_stimuli_only_variable.get() # New stimuli only Boolean
-                                                     ]
-                        # If not forced choice (default)...
-                        if not self.forced_choice_variable.get():
-                            print("Operant Box Screen Built") 
-                            list_of_variables_to_pass.append([]) # Add an empty list at the end for forced choice trials
-                            self.MS = MainScreen(*list_of_variables_to_pass)
-                        # ...if forced choice
+        if not sum([self.new_old_variable.get() != "NA", self.forced_choice_variable.get() == 1, self.new_stimuli_only_variable.get()]) > 1:
+            if not (self.new_old_variable.get() != "NA" and int(self.training_phase_variable.get()[0]) in [0,1]):
+                if not (self.forced_choice_variable.get() and self.new_stimuli_only_variable.get()):
+                    if self.subject_ID_variable.get() in self.pigeon_name_list:
+                        if self.training_phase_variable.get() in self.training_phase_name_list and self.training_subphase_variable.get() in  self.training_subphase_name_list:
+                            # If a forced choice session, it must be for training subphases 
+                            # only (and not autoshaping)
+                            if (self.forced_choice_variable.get() == 0) or (self.training_subphase_variable.get() == "i: Training" and self.training_phase_variable.get() != "0: Autoshaping") and not (self.new_stimuli_only_variable.get() and self.training_subphase_variable.get() > 0):
+                                list_of_variables_to_pass = [self.subject_ID_variable.get(),
+                                                             self.record_data_variable.get(), # Boolean for recording data (or not)
+                                                             self.data_folder_directory, # directory for data folder
+                                                             self.training_phase_variable.get(), # Which training phase
+                                                             self.training_phase_name_list, # list of training phases
+                                                             self.training_subphase_variable.get(), # Training subphase variable
+                                                             self.training_subphase_name_list,
+                                                             self.manual_FR_stringvar.get(), # Manual FR
+                                                             self.forced_choice_variable.get(), # Forced choice Boolean,
+                                                             self.new_stimuli_only_variable.get(), # New stimuli only Boolean
+                                                             self.new_old_variable.get() # Designate new/old contingency
+                                                             ]
+                                # If not forced choice (default)...
+                                if not self.forced_choice_variable.get():
+                                    print("Operant Box Screen Built") 
+                                    list_of_variables_to_pass.append([]) # Add an empty list at the end for forced choice trials
+                                    self.MS = MainScreen(*list_of_variables_to_pass)
+                                # ...if forced choice
+                                else:
+                                    self.FPO = ForcedChoiceOptionWindow(self.training_phase_name_list.index(self.training_phase_variable.get()),
+                                                                        list_of_variables_to_pass)
+                            else:
+                                print("\nERROR: Cannot Run Forced Choice/Only New for Non-Training or Autoshaping Sessions")
                         else:
-                            self.FPO = ForcedChoiceOptionWindow(self.training_phase_name_list.index(self.training_phase_variable.get()),
-                                                                list_of_variables_to_pass)
+                            print("\nERROR: Input Experimental Phase Before Starting Session")
                     else:
-                        print("\nERROR: Cannot Run Forced Choice/Only New for Non-Training or Autoshaping Sessions")
+                        print("\nERROR: Input Correct Pigeon ID Before Starting Session")
                 else:
-                    print("\nERROR: Input Experimental Phase Before Starting Session")
+                    print("\nERROR: Cannot run 'forced choice' and 'all new' at once")
             else:
-                print("\nERROR: Input Correct Pigeon ID Before Starting Session")
+                print("\nERROR: Cannot run 'new/old' procedure on training phase 1; there's no old!")
         else:
-            print("\nERROR: Cannot run 'forced choice' and 'all new' at once")
+            print("\nERROR: Cannot run new/old procedure, forced choice session, or new stimuli only procedures together!")
             
     
 # This window is generated for forced choice sessions and will 
@@ -422,7 +447,7 @@ class MainScreen(object):
     def __init__(self, subject_ID, record_data, data_folder_directory,
                  training_phase, training_phase_name_list, training_subphase,
                  training_subphase_name_list, manual_FR, forced_choice_session,
-                 all_new_simuli_var, forced_choice_stim_list):
+                 all_new_simuli_var, new_old_var, forced_choice_stim_list):
         ## Firstly, we need to set up all the variables passed from within
         # the control panel object to this MainScreen object. We do this 
         # by setting each argument as "self." objects to make them global
@@ -452,6 +477,7 @@ class MainScreen(object):
         self.forced_choice_session = forced_choice_session
         self.forced_choice_stim_list = forced_choice_stim_list
         self.all_new_simuli_var = all_new_simuli_var
+        self.new_old_var = new_old_var
         
         ## Set up the visual Canvas
         self.root = Toplevel()
@@ -518,8 +544,8 @@ class MainScreen(object):
                        "SampleStimulus", "LComp", "RComp", "CorrectKey", "PairNum",
                        "TrialSubStage", "TrialTime", "TrialNum", "ReinTrialNum",
                        "SampleFR", "FI", "TrialType", "Subject", "TrainingPhase",
-                       "TrainingSubPhase", "ForcedChoiceSession", "AllNewStimuli",
-                       "Date"] # Column headers
+                       "TrainingSubPhase", "ForcedChoiceSession", "AllNewStimuli"
+                       "NewOldStimuliSession", "Date"] # Column headers
         self.session_data_frame.append(header_list) # First row of matrix is the column headers
         self.date = date.today().strftime("%y-%m-%d") # Today's date
 
@@ -571,7 +597,7 @@ class MainScreen(object):
             # Once we have all the potential stimuli for probe trials picked out,
             # we need to only pick either the first set of three pairs (S1, C1, 
             # S2, C2, S3, C3) for CBE.1 and FM.1 OR the fourth through sixth pairs 
-            # S4, C4, S5, C5, S6, C6) for CBE.2 and FM.2 -- is this true??
+            # S4, C4, S5, C5, S6, C6) for CBE.2
             # by sorting the list by the stimulus number.
             # Ex. From 'S10_Phase3.bmp' we extract '10'
             probe_stim_list = (sorted(probe_stim_list,
@@ -677,7 +703,8 @@ class MainScreen(object):
                     
                     # Then, check if we need it for this specific training phase.
                     # Autoshaping (or training phase 0)  is special in that it
-                    # copies the stimuli used in the first phase 
+                    # copies the stimuli used in the first phase. If we are
+                    # running the new/old program, then we only select 
                     img_phase_integer = int(i.split(".")[0][-1])
                     if self.all_new_simuli_var:
                         # In "all new stimuli sessions," the image's phase
@@ -688,6 +715,23 @@ class MainScreen(object):
                             # If so, categorize it as a training type stimulus (for
                             # appending ot the dictionary later)
                             pair_type = "training"
+                    
+                    # For the "new/old" sessions, we take all the comparisons
+                    # like normal, but will only select specific samples. If 
+                    # new, we only grab the samples from the current phase (e.g.,
+                    # img_phase_integer == self.training_phase). If old, we only
+                    # grab samples that are from previous phases.
+                    elif self.new_old_var in ["New", "Old"]:
+                        # If a comparison and from this phase or a previous
+                        # one, then buisness as usual
+                        if pair == "S" and (img_phase_integer <= self.training_phase): 
+                            pair_type = "training"
+                        # If a sample, there's more nuance to accept it...
+                        else:
+                            if self.new_old_var == "New" and img_phase_integer == self.training_phase:
+                                pair_type = "training"
+                            elif self.new_old_var == "Old" and img_phase_integer < self.training_phase:
+                                pair_type = "training"
                         
                     elif (img_phase_integer <= self.training_phase) or (self.training_phase == 0 and img_phase_integer == 1):
                         # If so, categorize it as a training type stimulus (for
@@ -1457,7 +1501,8 @@ class MainScreen(object):
             self.training_phase, # Phase of training as a number (0 - 7)
             self.training_subphase,  # Phase of training subphase as a numer (0 - 4)
             self.forced_choice_session, # Forced choice session
-            self.all_new_simuli_var, # Forced choice session
+            self.all_new_simuli_var, # All new stimuli session
+            self.new_old_var, # New/old session 
             date.today() # Today's date as "MM-DD-YYYY"
             ])
         
@@ -1467,7 +1512,7 @@ class MainScreen(object):
                        "TrialSubStage", "TrialTime", "TrialNum", "ReinTrialNum",
                        "SampleFR", "FI", "TrialType", "Subject", "TrainingPhase",
                        "TrainingSubPhase", "ForcedChoiceSession", "AllNewStimuli"
-                       "Date"] # Column headers
+                       "NewOldStimuliSession", "Date"] # Column headers
         
     def write_comp_data(self, SessionEnded):
         # The following function creates a .csv data document. It is either 
