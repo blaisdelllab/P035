@@ -544,7 +544,7 @@ class MainScreen(object):
                        "SampleStimulus", "LComp", "RComp", "CorrectKey", "PairNum",
                        "TrialSubStage", "TrialTime", "TrialNum", "ReinTrialNum",
                        "SampleFR", "FI", "TrialType", "Subject", "TrainingPhase",
-                       "TrainingSubPhase", "ForcedChoiceSession", "AllNewStimuli"
+                       "TrainingSubPhase", "ForcedChoiceSession", "AllNewStimuli",
                        "NewOldStimuliSession", "Date"] # Column headers
         self.session_data_frame.append(header_list) # First row of matrix is the column headers
         self.date = date.today().strftime("%y-%m-%d") # Today's date
@@ -1511,7 +1511,7 @@ class MainScreen(object):
                        "SampleStimulus", "LComp", "RComp", "CorrectKey", "PairNum",
                        "TrialSubStage", "TrialTime", "TrialNum", "ReinTrialNum",
                        "SampleFR", "FI", "TrialType", "Subject", "TrainingPhase",
-                       "TrainingSubPhase", "ForcedChoiceSession", "AllNewStimuli"
+                       "TrainingSubPhase", "ForcedChoiceSession", "AllNewStimuli",
                        "NewOldStimuliSession", "Date"] # Column headers
         
     def write_comp_data(self, SessionEnded):
