@@ -523,6 +523,8 @@ class MainScreen(object):
             self.hopper_duration = 3500 # duration of accessible hopper(ms)
         elif self.subject_ID == "TEST":
             self.hopper_duration = 2000 # duration of accessible hopper(ms)
+        elif self.subject_ID in ["Cousteau"]:
+            self.hopper_duration = 4000 # duration of accessible hopper(ms)
         else:
             self.hopper_duration = 6 * 1000 # duration of accessible hopper(ms)
         self.FI_duration = 1 # 1ms FI timer
