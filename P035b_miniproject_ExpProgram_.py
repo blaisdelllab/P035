@@ -945,7 +945,11 @@ class MainScreen(object):
         print(f"\n{'*'*30} Trial {self.current_trial_counter} begins {'*'*30}") # Terminal feedback...
         print(f"{'Event Type':>30} | Xcord. Ycord. | Stage | Session Time")
             
-        
+
+    # %% Outside of the main loop functions, there are several additional
+    # repeated functions that are called either outside of the loop or 
+    # multiple times across phases.
+    
     def change_cursor_state(self):
         # This function toggles the cursor state on/off. 
         # May need to update accessibility settings on your machince.
@@ -957,7 +961,8 @@ class MainScreen(object):
             self.root.config(cursor="") # Turn on cursor
             print("### Cursor turned on ###")
             self.cursor_visible = True
-        
+
+    
     def clear_canvas(self):
          # This is by far the most called function across the program. It
          # deletes all the objects currently on the Canvas. A finer point to 
@@ -971,49 +976,47 @@ class MainScreen(object):
             self.mastercanvas.delete("all")
         except TclError:
             print("No screen to exit")
-            
+        
     def exit_program(self, event): 
-       # This function can be called two different ways: automatically (when
-       # time/reinforcer session constraints are reached) or manually (via the
-       # "End Program" button in the control panel or bound "esc" key).
-           
-       # The program does a few different things:
-       #   1) Return hopper to down state, in case session was manually ended
-       #       during reinforcement (it shouldn't be)
-       #   2) Turn cursor back on
-       #   3) Writes compiled data matrix to a .csv file 
-       #   4) Destroys the Canvas object 
-       #   5) Calls the Paint object, which creates an onscreen Paint Canvas.
-       #       In the future, if we aren't using the paint object, we'll need 
-       #       to 
-       def other_exit_funcs():
-           if operant_box_version:
-               rpi_board.write(hopper_light_GPIO_num,
-                               False) # turn off hopper light
-               rpi_board.write(house_light_GPIO_num,
-                               False) # Turn off the house light
-               rpi_board.set_servo_pulsewidth(servo_GPIO_num,
-                                              hopper_down_val) # set hopper to down state
-               sleep(1) # Sleep for 1 s
-               rpi_board.set_PWM_dutycycle(servo_GPIO_num,
-                                           False)
-               rpi_board.set_PWM_frequency(servo_GPIO_num,
-                                           False)
-               rpi_board.stop() # Kill RPi board
-               # root.after_cancel(AFTER)
-               if not self.cursor_visible:
-               	self.change_cursor_state() # turn cursor back on, if applicable
-
-       self.write_comp_data(True) # write data for end of session
-       self.root.destroy() # destroy Canvas
-       print("\n GUI window exited")
-           
-       self.clear_canvas()
-       other_exit_funcs()
-       print("\n You may now exit the terminal and operater windows now.")
-       if operant_box_version:
-           polygon_fill.main(self.subject_ID) # call paint object
+        # This function can be called two different ways: automatically (when
+        # time/reinforcer session constraints are reached) or manually (via the
+        # "End Program" button in the control panel or bound "esc" key).
             
+        # The program does a few different things:
+        #   1) Return hopper to down state, in case session was manually ended
+        #       during reinforcement (it shouldn't be)
+        #   2) Turn cursor back on
+        #   3) Writes compiled data matrix to a .csv file 
+        #   4) Destroys the Canvas object 
+        #   5) Calls the Paint object, which creates an onscreen Paint Canvas.
+        #       In the future, if we aren't using the paint object, we'll need 
+        #       to 
+        def other_exit_funcs():
+            if operant_box_version:
+                rpi_board.write(hopper_light_GPIO_num,
+                                False) # turn off hopper light
+                rpi_board.write(house_light_GPIO_num,
+                                False) # Turn off the house light
+                rpi_board.set_servo_pulsewidth(servo_GPIO_num,
+                                               hopper_down_val) # set hopper to down state
+                sleep(1) # Sleep for 1 s
+                rpi_board.set_PWM_dutycycle(servo_GPIO_num,
+                                            False)
+                rpi_board.set_PWM_frequency(servo_GPIO_num,
+                                            False)
+                rpi_board.stop() # Kill RPi board
+                # root.after_cancel(AFTER)
+                if not self.cursor_visible:
+                	self.change_cursor_state() # turn cursor back on, if applicable
+            self.write_comp_data(True) # write data for end of session
+            self.root.destroy() # destroy Canvas
+            print("\n GUI window exited")
+            
+        self.clear_canvas()
+        other_exit_funcs()
+        print("\n You may now exit the terminal and operater windows now.")
+        if operant_box_version:
+            polygon_fill.main(self.subject_ID) # call paint object
 
     def write_data(self, event, outcome):
         # This function writes a new data line after EVERY peck. Data is
