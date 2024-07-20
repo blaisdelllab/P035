@@ -525,7 +525,11 @@ class MainScreen(object):
     
     #create the first part of a trial (e.g., sample stimulus presented)
     def sample_phase(self):
-        
+
+        if self.exp_phase_num == 1:
+            if operant_box_version and not self.light_HL_on_bool:
+                rpi_board.write(house_light_GPIO_num,
+                                True) # Turn on the houselight
         self.clear_canvas()
         self.trial_stage = 0
         #build background (i.e., "background pecks)
@@ -579,9 +583,6 @@ class MainScreen(object):
         # This is one half of the RR loop. It can be thought of as the resting
         # "return state" that is dependent upon a key press (on the O key). 
         # Otherwise, it will stay in this state forever.
-        if operant_box_version and not self.light_HL_on_bool:
-            rpi_board.write(house_light_GPIO_num,
-                            True) # Turn on the houselight
         self.write_data(event, "sample_key_press")
         self.sample_key_presses += 1 
         if self.sample_key_presses >= int(self.sample_FR):
@@ -592,7 +593,11 @@ class MainScreen(object):
 
     #create the choice part of a trial (e.g., comparison stimulus presented)
     def comparison_phase(self):
-        
+
+        if self.exp_phase_num == 0:
+            if operant_box_version and not self.light_HL_on_bool:
+                rpi_board.write(house_light_GPIO_num,
+                                True) # Turn on the houselight
         self.clear_canvas()
         
         self.trial_stage = 1
