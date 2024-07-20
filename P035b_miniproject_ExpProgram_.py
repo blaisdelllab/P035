@@ -279,7 +279,7 @@ class MainScreen(object):
         self.root.title(f"P035b {self.exp_phase_name}: ") # this is the title of the window
         self.mainscreen_height = 768 # height of the experimental canvas screen
         self.mainscreen_width = 1024 # width of the experimental canvas screen
-        #self.root.bind("<Escape>", self.exit_program) # bind exit program to the "esc" key
+        self.root.bind("<Escape>", self.exit_program) # bind exit program to the "esc" key
         
         # If the version is the one running in the boxes...
         if operant_box_version: 
