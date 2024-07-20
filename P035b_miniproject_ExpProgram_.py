@@ -75,7 +75,7 @@ try:
         import pigpio # import pi, OUTPUT
         import csv
         #...including art scripts
-        sys_path.insert(0, str(os_path.expanduser('~')+"/Desktop/Experiments/P035b/"))
+        sys_path.insert(0, str(os_path.expanduser('~')+"/Desktop/Experiments/P033/"))
         import graph
         import polygon_fill
         
