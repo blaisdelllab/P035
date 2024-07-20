@@ -365,10 +365,10 @@ class MainScreen(object):
         self.myFile_loc = 'FILL' # To be filled later on after Pig. ID is provided (in set vars func below)
         
         if self.exp_phase_num == 0:
-            self.stimuli_folder_path = "/Users/kayleyozimac/Desktop/P035b/P035b_Stimuli_familiarized_comparisons" #grabs the stimuli
+            self.stimuli_folder_path = "P035b_Stimuli_familiarized_comparisons" #grabs the stimuli
             self.stimuli_files_list = listdir(self.stimuli_folder_path) #creates a dictionary of the stimuli
         elif self.exp_phase_num == 1:
-            self.stimuli_folder_path = "/Users/kayleyozimac/Desktop/P035b/P035b_Stimuli" #grabs the stimuli
+            self.stimuli_folder_path = "P035b_Stimuli" #grabs the stimuli
             self.stimuli_files_list = listdir(self.stimuli_folder_path) #creates a dictionary of the stimuli
         
         ## SET UP STIMULI ORDER FOR TRIALS
