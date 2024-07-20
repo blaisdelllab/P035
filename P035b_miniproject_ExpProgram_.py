@@ -368,7 +368,7 @@ class MainScreen(object):
             self.stimuli_folder_path = "/home/blaisdelllab/Desktop/P035/P035b_Stimuli_familiarized_comparisons" #grabs the stimuli
             self.stimuli_files_list = listdir(self.stimuli_folder_path) #creates a dictionary of the stimuli
         elif self.exp_phase_num == 1:
-            self.stimuli_folder_path = "home/blaisdelllab/Desktop/P035/P035b_Stimuli" #grabs the stimuli
+            self.stimuli_folder_path = "/home/blaisdelllab/Desktop/P035/P035b_Stimuli" #grabs the stimuli
             self.stimuli_files_list = listdir(self.stimuli_folder_path) #creates a dictionary of the stimuli
         
         ## SET UP STIMULI ORDER FOR TRIALS
