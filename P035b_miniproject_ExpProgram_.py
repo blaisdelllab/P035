@@ -1030,17 +1030,18 @@ class MainScreen(object):
         else: # There are certain data events that are not pecks.
             x, y = "NA", "NA"   
         print(f"{outcome:>30} | x: {x: ^3} y: {y:^3} | {self.trial_stage:^5} | {str(datetime.now() - self.start_time)}")
+    
+        # Initialize comparison_group and foil_group
+        comparison_group = "NA"
+        foil_group = "NA"
         
         # Retrieve trial information directly from the stimuli assignment dictionary
         trial_info_dict = self.stimuli_assignment_dict[self.current_trial_counter]
-        comparison_group = trial_info_dict["comparison_group"]  
-        foil_group = trial_info_dict["foil_group"]  
-      #  if "comparison_group" == None,
-      #       "NA"
-      #  if "foil_group" == None,
-      #      "NA"
-     
         
+        if self.exp_phase_num == 1:
+            comparison_group = trial_info_dict["comparison_group"]  
+            foil_group = trial_info_dict["foil_group"]
+       
         # Let's establish where our stimuli are (if the session has started)
         if self.exp_phase_num == 0 and self.current_trial_counter > 0:
             trial_info_dict = self.stimuli_assignment_dict[self.current_trial_counter]
