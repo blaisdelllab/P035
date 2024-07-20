@@ -403,7 +403,7 @@ class MainScreen(object):
                         trial_counter += 1 # Increment trial counter
                         
             self.stimuli_assignment_dict = dict(sorted(self.stimuli_assignment_dict.items()))
-            print(self.stimuli_assignment_dict)
+        #    print(self.stimuli_assignment_dict)
                     
         elif self.exp_phase_num == 1: # If P035b experimental trials
             # Make a dictionary that is n = self.max_trials long (60). Each entry 
