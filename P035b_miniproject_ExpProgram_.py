@@ -352,7 +352,7 @@ class MainScreen(object):
             "SessionTime", "ExpPhase", "Subject", "Xcord", "Ycord", "Event",
             "TrialSubStage", "SampleStimulus", "LComp", "RComp", "CorrectKey",
             "TrialTime", "TrialNum", "ReinTrialNum", "SampleFR", "SampleTrialType", 
-            "CorrectComparisonGroup", "FoilGroup", "Date","ComparisonTrialTime","LastTrialNum"] # Column headers
+            "CorrectComparisonGroup", "FoilGroup", "Date","ComparisonTrialTime"] # Column headers
         self.session_data_frame.append(header_list) # First row of matrix is the column headers
         self.date = date.today().strftime("%y-%m-%d")
         self.myFile_loc = 'FILL' # To be filled later on after Pig. ID is provided (in set vars func below)
