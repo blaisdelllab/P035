@@ -379,7 +379,7 @@ class MainScreen(object):
         
         if self.exp_phase_num == 0: # For familiarization phase
             self.presentation_counts = {stimulus: {"left": 0, "right": 0} for stimulus in self.stimuli_files_list}
-            self.max_presentations = 6  # Each image should be shown 6 times (3 times in each location)
+            self.max_presentations = 1  # Each image should be shown 6 times (3 times in each location)
             
             # Make a dictionary that is n = self.max_trials long (60). Each entry 
             # should start with the file name, then the location (left/right).
