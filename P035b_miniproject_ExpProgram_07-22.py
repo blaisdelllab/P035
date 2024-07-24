@@ -347,7 +347,7 @@ class MainScreen(object):
         if self.exp_phase_num == 0:
             self.max_trials = 60 # Max number of trials within a session = 60 (10 comparisons shown 6 times)
         elif self.exp_phase_num == 1:
-            self.max_trials = 80 # 20 pairs shown  4 times each
+            self.max_trials = 20 # 20 pairs shown  4 times each
         self.session_data_frame = [] #This where trial-by-trial data is stored
         self.trial_stage = 0 # This tracks the stage within the trial
         self.current_trial_counter = 0 # This counts the number of trials that have passed
