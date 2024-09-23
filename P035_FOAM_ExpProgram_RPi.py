@@ -519,7 +519,7 @@ class MainScreen(object):
         self.trial_FR = None # FR of a trial
         self.session_duration = datetime.now() + timedelta(minutes = 90) # Max session time is 90 min
         self.ITI_duration = 15 * 1000 # duration of inter-trial interval (ms)
-        if self.subject_ID in ["Shy Guy", "Athena"]:
+        if self.subject_ID in ["Shy Guy", "Athena", "Bon Jovi", "Darwin"]:
             self.hopper_duration = 3500 # duration of accessible hopper(ms)
         elif self.subject_ID == "TEST":
             self.hopper_duration = 2000 # duration of accessible hopper(ms)
