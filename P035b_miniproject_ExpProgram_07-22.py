@@ -5,7 +5,7 @@ Created on Mon Jun  3 09:58:27 2024
 
 @author: kayleyozimac and Cyrus K.
 
-Last updated on July 21, 2024.
+Last updated on October 27, 2024.
 
 This is the code for Kayley Ozimac's mini project (P035b) for her 'FOAM' project
     
@@ -316,7 +316,7 @@ class MainScreen(object):
         if not operant_box_version or  self.subject_ID == "TEST":
             self.hopper_duration = 1000 # Duration of food access (ms)
         else: 
-            self.hopper_duration = 6000
+            self.hopper_duration = 4500
         # Set up FR (2) 
         self.comparison_FR = 2 
         self.comparison_key_presses = 0 # counts number of key presses on comp for each trial
