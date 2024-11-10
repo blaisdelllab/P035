@@ -422,11 +422,11 @@ class MainScreen(object):
                     trial_counter += 1
             
             self.stimuli_assignment_dict = dict(sorted(self.stimuli_assignment_dict.items()))
-            print(self.stimuli_assignment_dict)
+           # print(self.stimuli_assignment_dict)
             
             # Verify if each stimulus is shown exactly 3 times on the left and 3 times on the right
             for stimulus, counts in self.presentation_counts.items():
-                print(f"{stimulus}: {counts}")
+            #    print(f"{stimulus}: {counts}")
                     
         elif self.exp_phase_num == 1: # If P035b experimental trials
             # Make a dictionary that is n = self.max_trials long (60). Each entry 
@@ -527,7 +527,7 @@ class MainScreen(object):
                         self.stimuli_assignment_dict[trial_num_list[i]] = trial_dict    
             
             self.stimuli_assignment_dict = dict(sorted(self.stimuli_assignment_dict.items()))
-            print(self.stimuli_assignment_dict)
+          #  print(self.stimuli_assignment_dict)
 
         ## Finally, start the recursive loop that runs the program:
         self.place_birds_in_box()
