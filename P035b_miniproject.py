@@ -425,7 +425,7 @@ class MainScreen(object):
            # print(self.stimuli_assignment_dict)
             
             # Verify if each stimulus is shown exactly 3 times on the left and 3 times on the right
-            for stimulus, counts in self.presentation_counts.items():
+            # for stimulus, counts in self.presentation_counts.items():
             #    print(f"{stimulus}: {counts}")
                     
         elif self.exp_phase_num == 1: # If P035b experimental trials
