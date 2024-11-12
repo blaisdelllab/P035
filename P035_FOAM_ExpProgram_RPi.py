@@ -496,7 +496,7 @@ class MainScreen(object):
             # Then fullscreen (on a 768x1024p screen). Note that this assumes 
             # both monitors have identical sizes & the operant box is to the
             # "left" of the control panel.
-            self.root.geometry(f"1920x{self.mainscreen_height}+{self.mainscreen_width}+0")
+            self.root.geometry(f"{self.mainscreen_width}x{self.mainscreen_height}+1920+0")
             self.root.attributes('-fullscreen',
                                  True)
             self.mastercanvas = Canvas(self.root,
