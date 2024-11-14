@@ -15,7 +15,7 @@ at the stimulus resulted in the presentation of:
     Subphase 2 (choice task). As the comparison stimulus acted as a start key to 
 the trial. That is, two circles, each different sizes, were positioned in both 
 of the comparison locations. During this task, birds must choose the smaller of 
-the 2 stimuli in order to recieve reinforcement (6s access to the food hopper). 
+the 2 stimuli in order to recieve reinforcement (4.5s access to the food hopper). 
 
 The completion of each trial is followed by a 15-s intertrial interval (ITI), 
 which remained in effect throughout the experiment. The remaining 10 comparison 
@@ -330,7 +330,7 @@ class MainScreen(object):
         if not operant_box_version or  self.subject_ID == "TEST":
             self.hopper_duration = 1000 # Duration of food access (ms)
         else: 
-            self.hopper_duration = 3500
+            self.hopper_duration = 4500
         # Set up FR (2) 
         self.comparison_FR = 2 
         self.comparison_key_presses = 0 # counts number of key presses on comp for each trial
