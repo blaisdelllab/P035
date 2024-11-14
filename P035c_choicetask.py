@@ -330,7 +330,7 @@ class MainScreen(object):
         if not operant_box_version or  self.subject_ID == "TEST":
             self.hopper_duration = 1000 # Duration of food access (ms)
         else: 
-            self.hopper_duration = 6000
+            self.hopper_duration = 3500
         # Set up FR (2) 
         self.comparison_FR = 2 
         self.comparison_key_presses = 0 # counts number of key presses on comp for each trial
