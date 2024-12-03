@@ -1326,7 +1326,8 @@ class MainScreen(object):
                                                                                                       "",
                                                                                                       "FM.1", 
                                                                                                       "FM.2", 
-                                                                                                      "FM.3"]:
+                                                                                                      "FM.3",
+                                                                                                      "CBE.3"]:
                                 self.provide_food(True) 
                             # ... correct CBE probe trials go straight to the ITI
                             else:
@@ -1335,7 +1336,8 @@ class MainScreen(object):
                         else:
                             if self.stimulus_order_dict[self.current_trial_counter]["trial_type"] in ["FM.1", 
                                                                                                       "FM.2", 
-                                                                                                      "FM.3"]:
+                                                                                                      "FM.3",
+                                                                                                      "CBE.3"]:
                                 self.write_data(event, "incorrect_choice")
                                 self.provide_food(True) #FM = nondifferential reinforcement
                             else:
@@ -1345,7 +1347,6 @@ class MainScreen(object):
                         self.write_data(event, "pre_FI_choice")
                 else:
                     print("ERROR: something is fucked up")
-            
     
     # %% Post-choice contingencies: always either reinforcement (provide_food)
     # or time-out (time_out_func). Both lead back to the next trial's ITI,
