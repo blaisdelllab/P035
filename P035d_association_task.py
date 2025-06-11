@@ -315,9 +315,11 @@ class MainScreen(object):
                            lambda event: self.change_cursor_state()) # bind cursor on/off state to "c" key
             # Then fullscreen (on a 1024x768p screen). Assumes that both screens
             # that are being used have identical dimensions
-            self.root.geometry(f"{self.mainscreen_width}x{self.mainscreen_height}-1024+0")
-            self.root.attributes('-fullscreen',
-                                 True)
+            # Set geometry before showing window
+            self.root.withdraw()  # Hide the window while we reposition
+            self.root.geometry(f"{self.mainscreen_width}x{self.mainscreen_height}+1024+0")  # Adjust +X+Y to target second screen
+            self.root.deiconify()  # Show the window again
+            self.root.attributes('-fullscreen', True)
             self.mastercanvas = Canvas(self.root,
                                    bg="black")
             self.mastercanvas.pack(fill = BOTH,
