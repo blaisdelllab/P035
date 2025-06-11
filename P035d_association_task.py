@@ -301,9 +301,13 @@ class MainScreen(object):
         
         ## Set up the visual Canvas
         self.root = Toplevel()
+        self.root.geometry("1024x768+1024+0")
+        self.root.attributes('-fullscreen', True)
         self.root.title(f"P035d {self.exp_phase_name}: ") # this is the title of the window
         self.mainscreen_height = 768 # height of the experimental canvas screen
         self.mainscreen_width = 1024 # width of the experimental canvas screen
+        self.root.geometry(f"{self.mainscreen_width}x{self.mainscreen_height}+{self.mainscreen_width}+0")
+        self.root.attributes('-fullscreen', True)
         self.root.bind("<Escape>", self.exit_program) # bind exit program to the "esc" key
         
         # If the version is the one running in the boxes...
