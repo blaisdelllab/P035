@@ -300,9 +300,7 @@ class MainScreen(object):
         self.record_data = record_data
         
         ## Set up the visual Canvas
-        self.root = Tk()
-        self.root.geometry("1024x768+1024+0")
-        self.root.attributes('-fullscreen', True)
+        self.root = Toplevel()
         self.root.title(f"P035d {self.exp_phase_name}: ") # this is the title of the window
         self.mainscreen_height = 768 # height of the experimental canvas screen
         self.mainscreen_width = 1024 # width of the experimental canvas screen
@@ -318,7 +316,7 @@ class MainScreen(object):
             # Then fullscreen (on a 1024x768p screen). Assumes that both screens
             # that are being used have identical dimensions
             # Set geometry before showing window
-            self.root.geometry(f"{self.mainscreen_width}x{self.mainscreen_height}+{self.mainscreen_width}+0")
+            self.root.geometry(f"{self.mainscreen_width}x{self.mainscreen_height}+1920+0")
             self.root.attributes('-fullscreen', True)
             self.mastercanvas = Canvas(self.root,
                                    bg="black")
