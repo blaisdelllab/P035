@@ -300,7 +300,7 @@ class MainScreen(object):
         self.record_data = record_data
         
         ## Set up the visual Canvas
-        self.root = Toplevel()
+        self.root = Tk()
         self.root.geometry("1024x768+1024+0")
         self.root.attributes('-fullscreen', True)
         self.root.title(f"P035d {self.exp_phase_name}: ") # this is the title of the window
