@@ -316,9 +316,7 @@ class MainScreen(object):
             # Then fullscreen (on a 1024x768p screen). Assumes that both screens
             # that are being used have identical dimensions
             # Set geometry before showing window
-            self.root.withdraw()  # Hide the window while we reposition
-            self.root.geometry(f"{self.mainscreen_width}x{self.mainscreen_height}+1024+0")  # Adjust +X+Y to target second screen
-            self.root.deiconify()  # Show the window again
+            self.root.geometry(f"{self.mainscreen_width}x{self.mainscreen_height}+{self.mainscreen_width}+0")
             self.root.attributes('-fullscreen', True)
             self.mastercanvas = Canvas(self.root,
                                    bg="black")
