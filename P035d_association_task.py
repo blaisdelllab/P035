@@ -941,9 +941,6 @@ class MainScreen(object):
     
     def choice_task(self):
         if self.exp_phase_num == 0 or 1:
-            if operant_box_version and not self.light_HL_on_bool:
-                rpi_board.write(house_light_GPIO_num, True)  # Turn on the houselight
-    
             self.clear_canvas()
             self.trial_stage = 2
     
