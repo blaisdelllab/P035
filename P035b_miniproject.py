@@ -318,7 +318,7 @@ class MainScreen(object):
         else: 
             self.hopper_duration = 4500
         if self.subject_ID == "Yoshi":
-            self.hopper_duration = 6000
+            self.hopper_duration = 5500
         # Set up FR (2) 
         self.comparison_FR = 2 
         self.comparison_key_presses = 0 # counts number of key presses on comp for each trial
