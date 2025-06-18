@@ -361,9 +361,6 @@ class MainScreen(object):
         self.reinforced_trial_counter = 0 
         self.last_written_trial_num = None  # Track the last written trial number
         self.max_trials = 100
-        # Temporary override for Bowser in Phase 0
-        if self.exp_phase_num == 0 and self.subject_ID == "Bowser":
-            self.max_trials = 70
         # Max number of trials within a session differ by phase
         if self.exp_phase_num == 0: # 
             self.max_number_of_reinforced_trials = 100
@@ -435,11 +432,7 @@ class MainScreen(object):
                 "Number of comparisons and distractors must match (10 each)."
         
             self.max_presentations = 10  # Each stimulus shown 10 times
-            if self.exp_phase_num == 0 and self.subject_ID == "Bowser":
-                self.max_presentations = 7
             self.max_trials = len(comparison_list) * self.max_presentations  # 10 × 10 = 100 trials
-            if self.exp_phase_num == 0 and self.subject_ID == "Bowser":
-                self.max_trials = 70
             self.stimuli_assignment_dict = {}
         
             trial_counter = 1
@@ -474,8 +467,6 @@ class MainScreen(object):
                 
                 # Number of trials should match the comparison phase trials
                 self.max_trials = 100  # Assuming max_trials is 100
-                if self.exp_phase_num == 0 and self.subject_ID == "Bowser":
-                    self.max_trials = 70
                 
                 # Define the two stimuli
                 smaller_square = "correct_choice"
