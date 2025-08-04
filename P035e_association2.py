@@ -642,7 +642,7 @@ class MainScreen(object):
                     comparison = "C" + sample[1:]
                     comparison_num = int(comparison[1:3])
                     comparison_group = "F" if comparison_num <= 10 else "N"
-                    foil_candidates = [f"C{str(n).zfill(2)}.bmp" for n in range(1, 11) if n != comparison_num]
+                    foil_candidates = [f"C{str(n).zfill(2)}.bmp" for n in range(11, 21) if n != comparison_num]
                     foil = choice(foil_candidates)
                     comparison_location = choice(["left", "right"])
                     sample_FR = choice(range(3, 9))
