@@ -676,7 +676,7 @@ class MainScreen(object):
         self.mastercanvas.create_text(512,384,
                                       fill="white",
                                       font="Times 26 italic bold",
-                                      text=f"P035e \n Place bsird in box, then press space \n Subject: {self.subject_ID} \n Training Phase: {self.exp_phase_name}")
+                                      text=f"P035e \n Place bird in box, then press space \n Subject: {self.subject_ID} \n Training Phase: {self.exp_phase_name}")
     
     def first_ITI(self, event):
         print("Spacebar pressed -- SESSION STARTED") 
