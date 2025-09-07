@@ -85,7 +85,7 @@ class ExperimenterControlPanel(object):
         self.control_window.title("P040 Autoshaping Control Panel")
 
         # Subject ID
-        self.pigeon_name_list = ["Iggy","Jagger","Durrell","Vonnegut"]
+        self.pigeon_name_list = ["Thoth","Jagger","Durrell","Vonnegut"]
         self.pigeon_name_list.sort()
         self.pigeon_name_list.insert(0, "TEST")
         Label(self.control_window, text="Pigeon Name:").pack()
@@ -163,7 +163,7 @@ class MainScreen(object):
         self.max_trials = 60
         self.peck_counter = 0
         self.requirement = self.VR_schedule(5)
-        self.hopper_duration = 4000
+        self.hopper_duration = 5000
         self.ITI_duration = 15000
         self.start_time = datetime.now()
         self.date = date.today().strftime("%y-%m-%d")
