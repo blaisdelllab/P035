@@ -10,8 +10,8 @@ Created on Thu Aug  1 11:23:16 2024
     1) Phase 1 (familiarization): 10 (C1-10) comparison stimuli will be pre-
 exposed to the subjects. This phase will consist of 2 different subphases:
     Subphase 1 (start key). Each comparison stimulus were presented individually 
-in each session, an equal number of times on the left and right locations. Two pecks 
-at the stimulus resulted in the presentation of:
+in each session, positioned in the center of the screen and acted as a start key to
+a relational discrimination task. Two pecks at the stimulus resulted in the presentation of:
     Subphase 2 (choice task). As the comparison stimulus acted as a start key to 
 the trial. That is, two circles, each different sizes, were positioned in both 
 of the comparison locations. During this task, birds must choose the smaller of 
