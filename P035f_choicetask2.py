@@ -913,9 +913,9 @@ class MainScreen(object):
                 return
     
             # Define coordinates for left and right positions
-            left_x, left_y   = 300, 550
-            right_x, right_y = 724, 550
-            
+            left_x, left_y   = 400, 550
+            right_x, right_y = 624, 550
+
             # Define the size of the circles based on their labels
             if left_stimulus == smaller_circle:
       # Draw a larger black circle behind the smaller white circle
