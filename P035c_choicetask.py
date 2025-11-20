@@ -641,6 +641,10 @@ class MainScreen(object):
         self.image = ImageTk.PhotoImage(selected_image)
         
         x,y = 512, 405
+
+        # Lower the sample ONLY for Darwin
+        if self.subject_ID == "Darwin":
+            x, y = 512, 460
         
         #Create black circle around stimuli
         oval_radius = 85  
@@ -789,6 +793,10 @@ class MainScreen(object):
             self.image = ImageTk.PhotoImage(selected_image)
             
             x,y = 512, 405
+
+         # Lower the sample ONLY for Darwin
+            if self.subject_ID == "Darwin":
+                x, y = 512, 460
             
             #Create black circle around stimuli
             oval_radius = 85  
