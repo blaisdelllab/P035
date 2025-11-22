@@ -1285,7 +1285,19 @@ class MainScreen(object):
             # Get comparison and foil group information
             comparison_group = trial_info_dict.get("comparison_group", "NA")
             foil_group = trial_info_dict.get("foil_group", "NA")
+
+        # ---- Determine comparison_location safely ----
+        comparison_location = "NA"  # default
         
+        trial_info_dict = self.stimuli_assignment_dict.get(self.current_trial_counter, {})
+        
+        if self.exp_phase_num == 0:
+            # start key location for Phase 0
+            comparison_location = trial_info_dict.get("start_key_location", "NA")
+        
+        elif self.exp_phase_num == 1:
+            # proper comparison location for Phase 1
+            comparison_location = trial_info_dict.get("comparison_location", "NA")
         # Calculate the comparison trial time
         comparison_trial_time = (datetime.now() - self.comparison_start_time).total_seconds() if self.trial_stage == 1 else "NA"
     
