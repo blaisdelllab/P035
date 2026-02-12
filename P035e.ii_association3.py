@@ -412,7 +412,8 @@ class MainScreen(object):
             self.sample_files_list = listdir(self.distractor_stimuli_path)
             self.distractor_files_list = self.sample_files_list
         
-        elif self.exp_phase_num == 2:  # Experimental MTS trials            self.stimuli_folder_path = os_path.join(base_path, "P035e_stimuli")
+        elif self.exp_phase_num == 2:  # Phase 3 / Experimental MTS trials
+            self.stimuli_folder_path = os_path.join(base_path, "P035e.ii_stimuli")
             self.stimuli_files_list = listdir(self.stimuli_folder_path)
         
 
