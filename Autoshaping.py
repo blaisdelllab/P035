@@ -85,7 +85,7 @@ class ExperimenterControlPanel(object):
         self.control_window.title("Autoshaping Control Panel")
 
         # Subject ID
-        self.pigeon_name_list = ["Iggy","Jagger","Durrell","Vonnegut"]
+        self.pigeon_name_list = ["Darwin"]
         self.pigeon_name_list.sort()
         self.pigeon_name_list.insert(0, "TEST")
         Label(self.control_window, text="Pigeon Name:").pack()
