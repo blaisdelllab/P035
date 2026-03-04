@@ -147,13 +147,13 @@ class MainScreen(object):
             self.root.bind("<c>", lambda event: self.change_cursor_state()) 
             self.root.geometry(f"{self.mainscreen_width}x{self.mainscreen_height}+1920+0")
             self.root.attributes('-fullscreen', True)
-            self.mastercanvas = Canvas(self.root, bg="grey",
+            self.mastercanvas = Canvas(self.root, bg="black",
                                        height=self.mainscreen_height,
                                        width=self.mainscreen_width)
             self.mastercanvas.pack()   # <-- you were missing this
         else: 
             self.mastercanvas = Canvas(self.root,
-                                       bg="grey",
+                                       bg="black",
                                        height=self.mainscreen_height,
                                        width=self.mainscreen_width)
             self.mastercanvas.pack()
@@ -202,7 +202,7 @@ class MainScreen(object):
 
         # ITI screen clickable for logging ITI pecks
         self.mastercanvas.create_rectangle(0, 0, self.mainscreen_width, self.mainscreen_height,
-                                           fill="grey", outline="grey", tag="bkgrd")
+                                           fill="black", outline="black", tag="bkgrd")
         self.mastercanvas.tag_bind("bkgrd", "<Button-1>",
                                    lambda event: self.write_data(event, "ITI_peck"))
 
@@ -223,8 +223,8 @@ class MainScreen(object):
         # Background clickable area for background pecks
         self.mastercanvas.create_rectangle(0, 0, self.mainscreen_width, 
                                            self.mainscreen_height,
-                                           fill="grey",
-                                           outline="grey", 
+                                           fill="black",
+                                           outline="black", 
                                            tag="bkgrd")
         self.mastercanvas.tag_bind("bkgrd", "<Button-1>",
                                    lambda event: self.write_data(event, "background_peck"))
@@ -241,8 +241,8 @@ class MainScreen(object):
             key_coord_list[3] + outline_size
         ]
         self.mastercanvas.create_oval(*outline_coords_list,
-                                      fill="grey", 
-                                      outline="grey", 
+                                      fill="black", 
+                                      outline="black", 
                                       tag="bg_circle")
         self.mastercanvas.tag_bind("bg_circle", 
                                    "<Button-1>", 
