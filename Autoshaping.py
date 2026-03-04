@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Autoshaping procedure for P040
+Autoshaping procedure
 
 Trials begin with a circle stimulus. 
 Pecks to the circle stimulus on a VR5 schedule result in reinforcement (4s food). 
@@ -77,12 +77,12 @@ class ExperimenterControlPanel(object):
     def __init__(self):
         self.doc_directory = str(os_path.expanduser('~')) + "/Documents/"
         if operant_box_version:
-            self.data_folder_directory = "/home/blaisdelllab/Desktop/Data/P040/"
+            self.data_folder_directory = "/home/blaisdelllab/Desktop/Data/P035/"
         else:
-            self.data_folder_directory = os_path.expanduser('~/Desktop/Experiments/P040/data')
+            self.data_folder_directory = os_path.expanduser('~/Desktop/Experiments/P035/data')
 
         self.control_window = Tk()
-        self.control_window.title("P040 Autoshaping Control Panel")
+        self.control_window.title("Autoshaping Control Panel")
 
         # Subject ID
         self.pigeon_name_list = ["Iggy","Jagger","Durrell","Vonnegut"]
