@@ -312,7 +312,7 @@ class MainScreen(object):
         
         ## Set up the visual Canvas
         self.root = Toplevel() 
-        self.root.title(f"P035e.ii {self.exp_phase_name}: ") # this is the title of the window
+        self.root.title(f"P035e.iii {self.exp_phase_name}: ") # this is the title of the window
         self.mainscreen_height = 768 # height of the experimental canvas screen
         self.mainscreen_width = 1024 # width of the experimental canvas screen
         self.root.bind("<Escape>", self.exit_program) # bind exit program to the "esc" key
