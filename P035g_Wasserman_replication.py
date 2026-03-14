@@ -7,7 +7,7 @@ Created on Thu Jan 15 11:57:17 2026
 ""
 
 #This is the code for Kayley Ozimac's mini project (P035g) for her 'FOAM' project.
-It is a replication of Castro et al. (2013)
+It is a replication of Castro et al. (2018)
     
      1) Phase 1 (Acclimation): During this phase, subjects were acclimated to the 
 experimental contingencies and stimuli. Each trial began with the presentation of a 
@@ -417,7 +417,7 @@ class MainScreen(object):
         # Stimulus paths (single folder)
         # ----------------------------
         if operant_box_version:
-            base_path = "/home/blaisdelllab/Desktop/Experiments/"
+            base_path = "/home/blaisdelllab/Desktop/Experiments/P035/"
         else:
             base_path = "/Users/kayleyozimac/Desktop/P035g"
         
