@@ -447,7 +447,7 @@ class MainScreen(object):
         # Stimulus paths (single folder)
         # ----------------------------
         if operant_box_version:
-            base_path = "/home/blaisdelllab/Desktop/Experiments/P035g"
+            base_path = "/home/blaisdelllab/Desktop/Experiments/P035"
         else:
             base_path = "/Users/kayleyozimac/Desktop/P035g"
         
