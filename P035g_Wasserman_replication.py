@@ -208,7 +208,7 @@ class ExperimenterControlPanel(object):
             self.control_window,
             self.session_num_variable,
             "Not Phase 3",
-            *[str(i) for i in range(1, 8)]
+            *[str(i) for i in range(1, 9)]
         ).pack()
         # Record data variable?
         Label(self.control_window,
@@ -304,7 +304,7 @@ class MainScreen(object):
         self.comparison_location = None  # Initialize this to None or an appropriate default value
         self.sample_name = "NA"  # Initialize sample_name with a default value
         self.comparison_name = "NA"
-        # Choice requirement for test/supervised NDE-style)
+        # Choice requirement for test/supervised DE-style)
         # i.e., require the same number of pecks on the chosen comparison as the sample observing req
         # Comparison requirement: DE-style FR1 on comparisons
         self.comparison_FR = 1
@@ -370,10 +370,13 @@ class MainScreen(object):
             self.ITI_duration = 1000
         else:
             self.ITI_duration = 15000 # duration of inter-trial interval (ms) 
-        if not operant_box_version or  self.subject_ID == "TEST":
-            self.hopper_duration = 1000 # Duration of food access (ms)
-        else: 
-            self.hopper_duration = 4500
+        if not operant_box_version or self.subject_ID == "TEST":
+            self.hopper_duration = 1000
+        else:
+            if self.subject_ID == "Shy Guy":
+                self.hopper_duration = 4000  # 4500 - 500 ms
+            else:
+                self.hopper_duration = 4500
         # Set up FR 
         self.comparison_FR = 1
         self.comparison_key_presses = 0 # counts number of key presses on comp for each trial
