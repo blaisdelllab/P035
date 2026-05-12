@@ -374,7 +374,7 @@ class MainScreen(object):
             self.hopper_duration = 1000
         else:
             if self.subject_ID == "Shy Guy":
-                self.hopper_duration = 4000  # 4500 - 500 ms
+                self.hopper_duration = 3500  # 4500 - 1000 ms
             else:
                 self.hopper_duration = 4500
         # Set up FR 
