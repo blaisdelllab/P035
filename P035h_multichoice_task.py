@@ -765,6 +765,13 @@ class MainScreen(object):
         self.comparison_start_time = None
         self.trial_stage = 0
         self.trial_start = time()
+
+        # ITI pecks (as in P035g). Logged under the upcoming trial's number,
+        # with TrialSubStage = 0.
+        self._draw_background("ITI_peck")
+        if operant_box_version:
+            rpi_board.write(house_light_GPIO_num, False)
+
         self.write_comp_data(False)
         self.root.after(self.ITI_duration, self.sample_phase)
 
@@ -773,6 +780,10 @@ class MainScreen(object):
     def sample_phase(self):
         self.clear_canvas()
         self.trial_stage = 1
+        # House light on during trial phases (as in P035g).
+        if operant_box_version:
+            rpi_board.write(house_light_GPIO_num, True)
+        self._draw_background("background_peck")
         trial = self.stimuli_assignment_dict[self.current_trial_counter]
         stim_path = os_path.join(self.stimuli_path, trial["sample"])
         img = ImageTk.PhotoImage(Image.open(stim_path))
@@ -799,6 +810,7 @@ class MainScreen(object):
         # location is identical regardless of the number of choices shown.
         positions = [self.comparison_anchors[i] for i in trial["anchor_indices"]]
 
+        self._draw_background("background_peck")
         self._draw_inactive_sample(trial["sample"])
 
         self.comp_images = []
@@ -808,6 +820,19 @@ class MainScreen(object):
             self.comp_images.append(img)
             self.mastercanvas.create_image(x, y, image=img, anchor="center", tag=tag)
             self.mastercanvas.tag_bind(tag, "<Button-1>", self.comp_key_press)
+
+    def _draw_background(self, event_type):
+        # Full-screen black rectangle, drawn FIRST so stimuli sit on top of it.
+        # Pecks that land on a stimulus go to that stimulus's handler; pecks
+        # anywhere else hit this rectangle and are logged as `event_type`.
+        self.mastercanvas.create_rectangle(
+            0, 0, self.mainscreen_width, self.mainscreen_height,
+            fill="black", outline="black", tag="bkgrd"
+        )
+        self.mastercanvas.tag_bind(
+            "bkgrd", "<Button-1>",
+            lambda event, et=event_type: self.write_data(event, et)
+        )
 
     def _draw_inactive_sample(self, sample_name):
         sx, sy = self._sample_position()
@@ -853,6 +878,8 @@ class MainScreen(object):
 
     def _finish_choice(self):
         self.clear_canvas()
+        # Keep logging stray pecks during the brief post-choice gap before ITI.
+        self._draw_background("background_peck")
         trial = self.stimuli_assignment_dict[self.current_trial_counter]
         correct = trial["correct_comp"]
         is_correct = self.chosen_stimulus == correct
@@ -870,6 +897,7 @@ class MainScreen(object):
             self.root.after(250, self.ITI)
 
     def reinforcement_phase(self):
+        self.trial_stage = 3   # as in P035g
         self.clear_canvas()
         self.write_data(None, "reinforcement_provided")
         if operant_box_version:
