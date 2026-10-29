@@ -39,7 +39,7 @@ Expected stimulus folders:
     In test mode:
         ./P035h_Stimuli/
     On boxes:
-        /home/blaisdelllab/Desktop/Experiments/P035/P035h_Stimuli/
+        /home/blaisdelllab/Desktop/Experiments/P035h/P035h_Stimuli/
 
 Expected stimulus names:
     Trained samples:      S01.bmp ... S08.bmp
@@ -64,7 +64,7 @@ from datetime import datetime
 from os import getcwd, listdir, mkdir, path as os_path, popen
 from random import choice, shuffle, Random
 from sys import path as sys_path, setrecursionlimit
-from time import time
+from time import sleep, time
 from tkinter import BOTH, Button, Canvas, IntVar, Label, OptionMenu, Radiobutton, StringVar, Tk, Toplevel
 from math import cos, radians, sin
 from collections import Counter
@@ -106,8 +106,10 @@ try:
 
         hopper_vals_csv_path = str(os_path.expanduser("~") + "/Desktop/Box_Info/Hopper_vals.csv")
         up_down_table = list(csv.reader(open(hopper_vals_csv_path)))
-        hopper_up_val = up_down_table[1][0]
-        hopper_down_val = up_down_table[1][1]
+        # These are servo PULSE WIDTHS (microseconds), not 0-255 duty cycles,
+        # so they must be sent with set_servo_pulsewidth (as in P035g).
+        hopper_up_val = int(float(up_down_table[1][0]))
+        hopper_down_val = int(float(up_down_table[1][1]))
 
         popen("sh /home/blaisdelllab/Desktop/Hardware_Code/map_touchscreen.sh")
 except ModuleNotFoundError:
@@ -340,7 +342,7 @@ class MainScreen(object):
 
     def _setup_stimuli(self):
         if operant_box_version:
-            self.stimuli_path = str(os_path.expanduser("~") + "/Desktop/Experiments/P035/P035h_Stimuli")
+            self.stimuli_path = "/home/blaisdelllab/Desktop/Experiments/P035/P035h_Stimuli"
         else:
             self.stimuli_path = "/Users/kayleyozimac/Desktop/P035h/P035h_stimuli"
 
@@ -871,8 +873,9 @@ class MainScreen(object):
         self.clear_canvas()
         self.write_data(None, "reinforcement_provided")
         if operant_box_version:
-            rpi_board.set_PWM_dutycycle(servo_GPIO_num, hopper_up_val)
-            rpi_board.write(hopper_light_GPIO_num, 1)
+            rpi_board.write(house_light_GPIO_num, False)
+            rpi_board.write(hopper_light_GPIO_num, True)
+            rpi_board.set_servo_pulsewidth(servo_GPIO_num, hopper_up_val)
             self.root.after(self.hopper_duration, self._end_reinforcement)
         else:
             self.mastercanvas.create_text(512, 384, text="REINFORCEMENT", fill="white", font=("Arial", 32))
@@ -884,8 +887,8 @@ class MainScreen(object):
 
     def _hopper_down(self):
         if operant_box_version:
-            rpi_board.set_PWM_dutycycle(servo_GPIO_num, hopper_down_val)
-            rpi_board.write(hopper_light_GPIO_num, 0)
+            rpi_board.write(hopper_light_GPIO_num, False)
+            rpi_board.set_servo_pulsewidth(servo_GPIO_num, hopper_down_val)
 
     # -------------------------------------------------------------------------
     # Data logging
@@ -1021,8 +1024,18 @@ class MainScreen(object):
         # during reinforcement, destroying the window cancels _end_reinforcement.
         try:
             self._hopper_down()
-        except Exception:
-            pass
+            if operant_box_version:
+                # Same shutdown sequence as P035g: lights off, let the hopper
+                # settle down, release the servo, and stop the board.
+                rpi_board.write(house_light_GPIO_num, False)
+                sleep(1)
+                rpi_board.set_PWM_dutycycle(servo_GPIO_num, False)
+                rpi_board.set_PWM_frequency(servo_GPIO_num, False)
+                rpi_board.stop()
+                if not self.cursor_visible:
+                    self.change_cursor_state()
+        except Exception as e:
+            print("ERROR during hardware shutdown:", e)
         try:
             self.write_comp_data(True)
         except Exception as e:
