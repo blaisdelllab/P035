@@ -340,7 +340,7 @@ class MainScreen(object):
 
     def _setup_stimuli(self):
         if operant_box_version:
-            self.stimuli_path = str(os_path.expanduser("~") + "/Desktop/Experiments/P035h/P035h_Stimuli")
+            self.stimuli_path = str(os_path.expanduser("~") + "/Desktop/Experiments/P035h_Stimuli")
         else:
             self.stimuli_path = "/Users/kayleyozimac/Desktop/P035h/P035h_stimuli"
 
