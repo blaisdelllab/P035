@@ -236,6 +236,10 @@ class MainScreen(object):
     arc_radius = 370        # px from the sample center to each comparison
     arc_half_angle = 78     # deg; wide arc so comparisons spread toward the screen edges
     n_arc_positions = 5
+    # Each stimulus sits on a black circular peck key of this radius (as in
+    # P035g), so pecks near a stimulus's edge still count as pecks to it.
+    # Adjacent arc anchors are ~247 px apart, so keys never overlap.
+    key_radius = 85
 
     # Which arc anchors each display size uses (symmetric about center).
     # Anchor index 0 = far left ... 4 = far right.
@@ -274,6 +278,7 @@ class MainScreen(object):
         self.start_time = datetime.now()
         self.trial_start = None
         self.current_trial_counter = 0
+        self.reinforced_trial_counter = 0
         self.trial_stage = 0
         self.sample_key_presses = 0
         self.comparison_key_presses = 0
@@ -370,7 +375,8 @@ class MainScreen(object):
 
     def _setup_data_matrix(self):
         self.session_data_frame = [[
-            "SessionTime", "ExpPhase", "TrialType", "Subject", "Event", "TrialSubStage",
+            "SessionTime", "ExpPhase", "TrialType", "Subject", "Xcord", "Ycord",
+            "Event", "TrialSubStage",
             "SampleStimulus", "CompStimulus", "ChosenStimulus", "CorrectComparison",
             "ChoicePosition", "CorrectPosition", "FoilComposition", "FoilCount",
             "ChoiceCount", "AllComparisons", "FoilList", "TrialResult",
@@ -790,6 +796,7 @@ class MainScreen(object):
         self.active_sample_image = img
 
         sx, sy = self._sample_position()
+        self._draw_key(sx, sy, "sample")
         self.mastercanvas.create_image(sx, sy, image=self.active_sample_image, anchor="center", tag="sample")
         self.mastercanvas.tag_bind("sample", "<Button-1>", self.sample_key_press)
 
@@ -818,6 +825,7 @@ class MainScreen(object):
             tag = f"comp_{idx}"
             img = ImageTk.PhotoImage(Image.open(os_path.join(self.stimuli_path, comp_name)))
             self.comp_images.append(img)
+            self._draw_key(x, y, tag)
             self.mastercanvas.create_image(x, y, image=img, anchor="center", tag=tag)
             self.mastercanvas.tag_bind(tag, "<Button-1>", self.comp_key_press)
 
@@ -834,10 +842,17 @@ class MainScreen(object):
             lambda event, et=event_type: self.write_data(event, et)
         )
 
+    def _draw_key(self, x, y, tag):
+        # Black circle behind a stimulus, sharing the stimulus's tag so a peck
+        # anywhere on it goes to the same handler (as in P035g).
+        r = self.key_radius
+        self.mastercanvas.create_oval(x - r, y - r, x + r, y + r, fill="black", tag=tag)
+
     def _draw_inactive_sample(self, sample_name):
         sx, sy = self._sample_position()
         img = ImageTk.PhotoImage(Image.open(os_path.join(self.stimuli_path, sample_name)))
         self.inactive_sample_image = img
+        self._draw_key(sx, sy, "inactive_sample")
         self.mastercanvas.create_image(sx, sy, image=self.inactive_sample_image, anchor="center", tag="inactive_sample")
         self.mastercanvas.tag_bind("inactive_sample", "<Button-1>",
                                    lambda event: self.write_data(event, "inactive_sample_key_press"))
@@ -888,7 +903,8 @@ class MainScreen(object):
         if is_correct:
             self.write_data(None, "correct_choice")
             if trial["reinforced"]:
-                self.reinforcement_phase()
+                # 250 ms blank before the hopper (as in P035g).
+                self.root.after(250, self.reinforcement_phase)
             else:
                 self.root.after(250, self.ITI)
         else:
@@ -898,6 +914,7 @@ class MainScreen(object):
 
     def reinforcement_phase(self):
         self.trial_stage = 3   # as in P035g
+        self.reinforced_trial_counter += 1
         self.clear_canvas()
         self.write_data(None, "reinforcement_provided")
         if operant_box_version:
@@ -952,15 +969,27 @@ class MainScreen(object):
             if self.chosen_stimulus not in (None, "NA") and self.chosen_stimulus in comps:
                 choice_anchor = anchor_list[comps.index(self.chosen_stimulus)]
 
-        trial_time = "NA" if self.trial_start is None else round(time() - self.trial_start, 4)
+        # Peck coordinates (as in P035g); NA for non-peck events.
+        if event is not None:
+            x, y = event.x, event.y
+        else:
+            x, y = "NA", "NA"
+
+        # Time since the trial's stimuli appeared, i.e. excluding the ITI
+        # (as in P035g). ITI pecks therefore have negative TrialTime.
+        trial_time = "NA"
+        if self.trial_start is not None:
+            trial_time = round(time() - self.trial_start - (self.ITI_duration / 1000), 5)
         comp_trial_time = "NA"
         if self.comparison_start_time is not None:
             comp_trial_time = round((now - self.comparison_start_time).total_seconds(), 4)
         row = [
-            now.strftime("%H:%M:%S.%f")[:-3],
+            str(now - self.start_time),   # SessionTime: elapsed since session start (as in P035g)
             self.exp_phase,
             trial.get("trial_type", "NA"),
             self.subject_ID,
+            x,
+            y,
             event_name,
             self.trial_stage,
             trial.get("sample", "NA"),
@@ -977,7 +1006,7 @@ class MainScreen(object):
             self.trial_result if trial else "NA",   # SessionEnds row has no trial
             trial_time,
             self.current_trial_counter,
-            self.current_trial_counter,  # kept for compatibility with older analysis scripts
+            self.reinforced_trial_counter,  # running count of reinforced trials (as in P035g)
             trial.get("sample_FR", "NA"),
             self.choice_latency,
             self.choice_duration,
@@ -991,7 +1020,8 @@ class MainScreen(object):
             "NA" if self.session_num is None else self.session_num,
         ]
         self.session_data_frame.append(row)
-        print(f"{event_name:>30} | Trial {self.current_trial_counter:03d} | {trial.get('trial_type', 'NA')}")
+        print(f"{event_name:>30} | x: {x: ^3} y: {y:^3} | Trial {self.current_trial_counter:03d} | "
+              f"{trial.get('trial_type', 'NA')}")
 
     def _current_comp_stimulus_from_event(self, event_name, trial):
         if event_name.startswith("comp_") and "_press" in event_name:
@@ -1069,9 +1099,18 @@ class MainScreen(object):
         except Exception as e:
             print("ERROR writing data on exit:", e)
         try:
+            self.clear_canvas()
             self.root.destroy()
+            print("\n GUI window exited")
         except Exception:
             pass
+        print("\n You may now exit the terminal and operator windows now.")
+        # Open the paint program for the bird (as in P035g).
+        if operant_box_version:
+            try:
+                polygon_fill.main(self.subject_ID)
+            except Exception as e:
+                print("ERROR launching paint program:", e)
 
 
 # =============================================================================
